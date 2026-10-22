@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-git-sentinel"
+version = "0.1.0"
+description = "A high-performance Model Context Protocol (MCP) server for semantic Git diff analysis, context window protection, and pre-flight conflict detection."
+readme = "README.md"
+authors = [
+    { name = "Chevalier-Sans-Peur", email = "346157499+Chevalier-Sans-Peur@users.noreply.github.com" }
+]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Topic :: Software Development :: Quality Assurance"
+]
+keywords = ["mcp", "git", "diff", "ai", "context-window", "model-context-protocol", "codex", "claude"]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0"
+]
+
+[project.scripts]
+mcp-git-sentinel = "mcp_git_sentinel.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
