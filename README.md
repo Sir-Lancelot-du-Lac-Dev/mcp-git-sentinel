@@ -124,6 +124,25 @@ codex --mcp-server "python -m mcp_git_sentinel.cli"
 
 ---
 
+## 📊 Empirical Benchmarks: Agent Context Economics
+
+To evaluate real-world token compression and latency overhead, `mcp-git-sentinel` includes a reproducible micro-benchmark (`scripts/benchmark.py`) simulating an enterprise repository diff: **9,070 lines (~915 KB)** containing massive lockfile churn (`package-lock.json`), minified bundles, and core authentication services.
+
+| Metric | Raw Unfiltered Git Diff | MCP Git Sentinel (Optimized) | Compression & Efficiency |
+| :--- | :--- | :--- | :--- |
+| **Total Lines Evaluated** | 9,070 lines | ~120 lines (Semantic diff + AST) | **~98.7% line reduction** |
+| **Estimated Context Tokens** | **~267,814 tokens** | **~1,203 tokens** | **99.6% token savings** 📉 |
+| **End-to-End Latency** | Baseline (I/O bound) | **~127.7 ms** | **Sub-second edge evaluation** ⚡ |
+| **Peak Working Memory** | N/A | **3.11 MB** | **Negligible agent footprint** 🧠 |
+| **Noise Filtering** | 0 files | 2 lockfiles/minified suppressed | **100% lockfile noise filtered** |
+
+> **Reproduce locally:**
+> ```bash
+> python scripts/benchmark.py
+> ```
+
+---
+
 ## 🧪 Testing & Quality Assurance
 
 Run the comprehensive unit test suite:
