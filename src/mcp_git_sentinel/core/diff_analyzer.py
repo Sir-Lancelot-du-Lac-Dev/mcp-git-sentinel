@@ -4,6 +4,8 @@ import re
 from typing import List, Dict, Tuple
 from .models import FileDiffSummary, SmartDiffResult
 from .noise_filter import NoiseFilter
+from .entropy_guard import EntropyGuard, SecretFinding
+from .ast_analyzer import ASTAnalyzer
 
 
 class DiffAnalyzer:
@@ -78,7 +80,8 @@ class DiffAnalyzer:
         raw_diff: str,
         target_ref: str = "HEAD",
         max_tokens: int = 4000,
-        filter_noise: bool = True
+        filter_noise: bool = True,
+        scan_secrets: bool = True
     ) -> SmartDiffResult:
         """
         Produce a high-density, filtered diff guaranteed not to overflow max_tokens.
@@ -88,8 +91,16 @@ class DiffAnalyzer:
 
         included_files: List[FileDiffSummary] = []
         omitted_noisy: List[str] = []
+        all_secret_findings: List[Tuple[str, SecretFinding]] = []
 
         for f in all_files:
+            # 1. Secret Scanning
+            if scan_secrets:
+                findings = EntropyGuard.scan_diff_chunk(f.path, f.diff_content)
+                for finding in findings:
+                    all_secret_findings.append((f.path, finding))
+
+            # 2. Noise Filtering
             if filter_noise and f.is_noisy:
                 omitted_noisy.append(f.path)
             else:
@@ -117,6 +128,13 @@ class DiffAnalyzer:
                 header += f" and {len(omitted_noisy) - 5} more..."
             header += "\n"
 
+        # Security warnings header if secrets detected
+        if all_secret_findings:
+            header += "\n> 🚨 **SECURITY ALERT: Potential Secret Leakage Detected in Diff!**\n"
+            for fpath, item in all_secret_findings:
+                header += f"> - In `{fpath}` (Line ~{item.line_number}): **{item.description}** [Masked: `{item.masked_value}`]\n"
+            header += "> Please unstage or sanitize these credentials immediately before committing!\n\n"
+
         header_tokens = cls.estimate_tokens(header)
         budget_remaining -= header_tokens
         accumulated_tokens += header_tokens
@@ -126,7 +144,13 @@ class DiffAnalyzer:
                 is_truncated = True
                 break
 
-            file_header = f"\n### File: `{f.path}` ({f.status}, +{f.additions}/-{f.deletions})\n```diff\n"
+            # Semantic outline extraction
+            outlines = ASTAnalyzer.extract_semantic_outline_from_diff(f.path, f.diff_content)
+            outline_str = ""
+            if outlines:
+                outline_str = "- **Semantic Changes:** " + ", ".join([f"`{o}`" for o in outlines]) + "\n"
+
+            file_header = f"\n### File: `{f.path}` ({f.status}, +{f.additions}/-{f.deletions})\n{outline_str}```diff\n"
             file_footer = "\n```\n"
             overhead = cls.estimate_tokens(file_header + file_footer)
 

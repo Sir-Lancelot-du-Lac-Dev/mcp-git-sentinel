@@ -12,7 +12,7 @@ class MCPServer:
     """Zero-dependency Model Context Protocol stdio server for Git Sentinel."""
 
     SERVER_NAME = "mcp-git-sentinel"
-    SERVER_VERSION = "0.1.0"
+    SERVER_VERSION = "0.2.0"
     PROTOCOL_VERSION = "2024-11-05"
 
     def __init__(self, repo_path: Optional[str] = None):
@@ -32,7 +32,7 @@ class MCPServer:
             },
             {
                 "name": "smart_diff",
-                "description": "Generates a token-budgeted, noise-filtered semantic git diff for LLM context windows (auto-filtering lockfiles, dist, and minified bundles).",
+                "description": "Generates a token-budgeted, noise-filtered semantic git diff with AST change outlines and secret leak detection.",
                 "inputSchema": {
                     "type": "object",
                     "properties": {
@@ -51,9 +51,28 @@ class MCPServer:
                             "description": "Whether to automatically discard lockfiles and generated assets (default: true).",
                             "default": True
                         },
+                        "scan_secrets": {
+                            "type": "boolean",
+                            "description": "Whether to scan for high-entropy credentials and API keys (default: true).",
+                            "default": True
+                        },
                         "staged_only": {
                             "type": "boolean",
                             "description": "Whether to only diff staged files (git diff --cached).",
+                            "default": False
+                        }
+                    }
+                }
+            },
+            {
+                "name": "scan_secrets",
+                "description": "Audits Git diffs for accidental API key and high-entropy secret leaks using Shannon Entropy and credential signatures.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "staged_only": {
+                            "type": "boolean",
+                            "description": "Whether to audit only staged changes (default: false).",
                             "default": False
                         }
                     }
@@ -107,6 +126,7 @@ class MCPServer:
             target_ref = args.get("target_ref", "")
             max_tokens = args.get("max_tokens", 4000)
             filter_noise = args.get("filter_noise", True)
+            scan_secrets = args.get("scan_secrets", True)
             staged_only = args.get("staged_only", False)
 
             raw_diff = self.inspector.get_raw_diff(target_ref=target_ref or None, staged_only=staged_only)
@@ -114,9 +134,36 @@ class MCPServer:
                 raw_diff=raw_diff,
                 target_ref=target_ref or ("staged index" if staged_only else "working tree"),
                 max_tokens=max_tokens,
-                filter_noise=filter_noise
+                filter_noise=filter_noise,
+                scan_secrets=scan_secrets
             )
             return result.formatted_diff
+
+        elif name == "scan_secrets":
+            staged_only = args.get("staged_only", False)
+            raw_diff = self.inspector.get_raw_diff(staged_only=staged_only)
+            summaries = DiffAnalyzer.parse_unified_diff(raw_diff)
+
+            from .core.entropy_guard import EntropyGuard
+            total_findings = []
+            for s in summaries:
+                findings = EntropyGuard.scan_diff_chunk(s.path, s.diff_content)
+                for f in findings:
+                    total_findings.append((s.path, f))
+
+            if not total_findings:
+                return "✅ **Security Clean:** No high-entropy secrets or credential patterns detected in target changes."
+
+            lines = [
+                "🚨 **SECURITY ALERT: High-Entropy Secrets Detected!**",
+                f"- Found **{len(total_findings)}** potential credential leaks:",
+                "\n| File | Line | Type | Masked Value | Entropy (H) |",
+                "| :--- | :--- | :--- | :--- | :--- |"
+            ]
+            for path, f in total_findings:
+                lines.append(f"| `{path}` | ~{f.line_number} | {f.description} | `{f.masked_value}` | {f.entropy} |")
+            lines.append("\n> **Recommendation:** Immediately unstage or revoke these credentials before pushing!")
+            return "\n".join(lines)
 
         elif name == "detect_conflicts":
             target_ref = args.get("target_ref", "main")

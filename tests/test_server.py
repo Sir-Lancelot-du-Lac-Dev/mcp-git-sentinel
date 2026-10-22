@@ -36,6 +36,7 @@ def test_server_tools_list(server):
 
     assert "inspect_branch" in tool_names
     assert "smart_diff" in tool_names
+    assert "scan_secrets" in tool_names
     assert "detect_conflicts" in tool_names
     assert "estimate_context_cost" in tool_names
 
