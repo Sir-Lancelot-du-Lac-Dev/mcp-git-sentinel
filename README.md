@@ -1,6 +1,6 @@
-# MCP Git Sentinel 🛡️
+﻿# MCP Git Sentinel 🛡️
 
-[![CI](https://github.com/Chevalier-Sans-Peur/mcp-git-sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/Chevalier-Sans-Peur/mcp-git-sentinel/actions)
+[![CI](https://github.com/Sir-Lancelot-du-Lac-Dev/mcp-git-sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/Sir-Lancelot-du-Lac-Dev/mcp-git-sentinel/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-brightgreen)](https://www.python.org/)
 [![MCP Standard](https://img.shields.io/badge/MCP-2024--11--05-blueviolet)](https://modelcontextprotocol.io/)
@@ -11,7 +11,7 @@ A high-performance, zero-dependency **Model Context Protocol (MCP)** server engi
 
 ## 💡 The Thesis: Agent Context Economics
 
-In modern autonomous software engineering, AI Coding Agents (such as OpenAI Codex, Claude Code, Cursor, and Windsurf) rely on context windows as their primary working memory. However, traditional Git was built for human terminal readers and disk storage—**not for token-metered neural attention windows**.
+In modern autonomous software engineering, AI Coding Agents (such as OpenAI Codex, Claude Code, Cursor, and Windsurf) rely on context windows as their primary working memory. However, traditional Git was built for human terminal readers and disk storage�?*not for token-metered neural attention windows**.
 
 This architectural mismatch creates three critical bottlenecks:
 
@@ -29,18 +29,18 @@ This architectural mismatch creates three critical bottlenecks:
 `mcp-git-sentinel` sits as an intelligent semantic proxy between Git and your LLM Agent:
 
 ```
-┌──────────────┐      JSON-RPC 2.0 / stdio      ┌─────────────────────────────────┐      git cli      ┌──────────────┐
-│  AI Agent    │ ◄────────────────────────────► │        mcp-git-sentinel         │ ◄───────────────► │  Local Repo  │
-│ (Codex/MCP)  │                                │ (Zero External Runtime Deps)    │                   │              │
-└──────────────┘                                └────────────────┬────────────────┘                   └──────────────┘
-                                                                 │
-                                     ┌───────────────────────────┴───────────────────────────┐
-                                     │                                                       │
-                           ┌─────────▼─────────┐    ┌─────────────────▼─────────┐   ┌────────▼────────┐
-                           │ Noise Suppression │    │ Shannon Entropy Sentinel  │   │  AST Semantic   │
-                           │ 14+ Lockfile types│    │ H(X) secret calculation   │   │  Outline Parser │
-                           │ Minified / Maps   │    │ Pattern & Masking Engine  │   │  Class/Def Sig  │
-                           └───────────────────┘    └───────────────────────────┘   └─────────────────┘
+┌──────────────�?     JSON-RPC 2.0 / stdio      ┌─────────────────────────────────�?     git cli      ┌──────────────�?
+�? AI Agent    �?◄────────────────────────────�?�?       mcp-git-sentinel         �?◄───────────────�?�? Local Repo  �?
+�?(Codex/MCP)  �?                               �?(Zero External Runtime Deps)    �?                  �?             �?
+└──────────────�?                               └────────────────┬────────────────�?                  └──────────────�?
+                                                                 �?
+                                     ┌───────────────────────────┴───────────────────────────�?
+                                     �?                                                      �?
+                           ┌─────────▼─────────�?   ┌─────────────────▼─────────�?  ┌────────▼────────�?
+                           �?Noise Suppression �?   �?Shannon Entropy Sentinel  �?  �? AST Semantic   �?
+                           �?14+ Lockfile types�?   �?H(X) secret calculation   �?  �? Outline Parser �?
+                           �?Minified / Maps   �?   �?Pattern & Masking Engine  �?  �? Class/Def Sig  �?
+                           └───────────────────�?   └───────────────────────────�?  └─────────────────�?
 ```
 
 ### 1. AST-Aware Semantic Change Outlines
@@ -57,7 +57,7 @@ Simulates branch compatibility in-memory without checking out branches, modifyin
 
 ---
 
-## 🛠️ MCP Tools Exposed
+## 🛠�?MCP Tools Exposed
 
 | Tool | Description |
 | :--- | :--- |
@@ -69,13 +69,13 @@ Simulates branch compatibility in-memory without checking out branches, modifyin
 
 ---
 
-## ⚡ Quick Start
+## �?Quick Start
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone git@github.com:Chevalier-Sans-Peur/mcp-git-sentinel.git
+git clone git@github.com:Sir-Lancelot-du-Lac-Dev/mcp-git-sentinel.git
 cd mcp-git-sentinel
 
 # Install in editable mode
@@ -137,4 +137,4 @@ All 18 unit tests run in **< 2.5 seconds** and validate cross-platform compatibi
 ## 📜 License
 
 Distributed under the [MIT License](LICENSE).
-Copyright (c) 2026 Chevalier-Sans-Peur.
+Copyright (c) 2026 Sir-Lancelot-du-Lac-Dev.

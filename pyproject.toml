@@ -8,7 +8,7 @@ version = "0.2.0"
 description = "A high-performance Model Context Protocol (MCP) server for semantic Git diff analysis, context window protection, and pre-flight conflict detection."
 readme = "README.md"
 authors = [
-    { name = "Chevalier-Sans-Peur", email = "346157499+Chevalier-Sans-Peur@users.noreply.github.com" }
+    { name = "Sir-Lancelot-du-Lac-Dev", email = "346207872+Sir-Lancelot-du-Lac-Dev@users.noreply.github.com" }
 ]
 license = { text = "MIT" }
 classifiers = [
