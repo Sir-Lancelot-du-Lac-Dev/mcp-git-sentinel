@@ -12,7 +12,7 @@ class MCPServer:
     """Zero-dependency Model Context Protocol stdio server for Git Sentinel."""
 
     SERVER_NAME = "mcp-git-sentinel"
-    SERVER_VERSION = "0.2.0"
+    SERVER_VERSION = "0.3.0"
     PROTOCOL_VERSION = "2024-11-05"
 
     def __init__(self, repo_path: Optional[str] = None):

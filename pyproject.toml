@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcp-git-sentinel"
-version = "0.2.0"
+version = "0.3.0"
 description = "A high-performance Model Context Protocol (MCP) server for semantic Git diff analysis, context window protection, and pre-flight conflict detection."
 readme = "README.md"
 authors = [
@@ -27,6 +27,9 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
+tree-sitter = [
+    "tree-sitter>=0.22.0"
+]
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=4.1.0"
